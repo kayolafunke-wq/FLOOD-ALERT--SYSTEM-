@@ -7,14 +7,8 @@ import os
 class Config:
     """Database and API configuration"""
     
-    # Database Configuration
-    DB_CONFIG = {
-        'dbname': 'flood_alert',
-        'user': 'postgres',
-        'password': 'panda@55',  # CHANGE THIS to your PostgreSQL password
-        'host': 'localhost',
-        'port': '5432'
-    }
+    # Database Configuration (SQLite - no setup required!)
+    DB_PATH = os.path.join(os.path.dirname(__file__), 'flood_alert.db')
     
     # API Configuration
     API_HOST = '0.0.0.0'
@@ -35,6 +29,5 @@ class Config:
     
     @staticmethod
     def get_db_connection_string():
-        """Get PostgreSQL connection string"""
-        cfg = Config.DB_CONFIG
-        return f"postgresql://{cfg['user']}:{cfg['password']}@{cfg['host']}:{cfg['port']}/{cfg['dbname']}"
+        """Get SQLite connection string"""
+        return f"sqlite:///{Config.DB_PATH}"
