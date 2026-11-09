@@ -19,7 +19,7 @@ def seed_database():
     regions = [
         ('Lilongwe', 'Lilongwe', 1077116, -13.9833, 33.7833),
         ('Blantyre', 'Blantyre', 800264, -15.7861, 35.0058),
-        ('Zomba', 'Zomba', 105013, -15.3850, 35.3190),
+        ('Chikwawa', 'Chikwawa', 115000, -16.0289, 34.7968),
         ('Mzuzu', 'Mzuzu', 133968, -11.4500, 34.0167),
         ('Karonga', 'Karonga', 61609, -9.9333, 33.9333),
         ('Mangochi', 'Mangochi', 51429, -14.4783, 35.2644),
@@ -39,7 +39,7 @@ def seed_database():
     stations = [
         ('Lilongwe Met Station', 'LLW001', -13.9833, 33.7833, 1, 1),
         ('Chileka Airport', 'BT001', -15.6794, 34.9739, 2, 1),
-        ('Zomba Plateau', 'ZB001', -15.3667, 35.3167, 3, 1),
+        ('Chikwawa Station', 'CK001', -16.0289, 34.7968, 3, 1),
         ('Mzuzu Airport', 'MZ001', -11.4444, 34.0119, 4, 1),
         ('Karonga Station', 'KR001', -9.9333, 33.9333, 5, 1),
     ]

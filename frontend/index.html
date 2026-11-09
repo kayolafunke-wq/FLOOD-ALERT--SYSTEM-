@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flood Alert System - Zomba, Malawi</title>
+    <title>Flood Alert System - Chikwawa, Malawi</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <style>
         * {
@@ -395,7 +395,7 @@
         <div class="header-content">
             <div>
                 <h1>🌊 Flood Alert System</h1>
-                <p>Real-time flood risk monitoring for Zomba, Malawi</p>
+                <p>Real-time flood risk monitoring for Chikwawa, Malawi</p>
             </div>
             <div class="status-badge connected" id="statusBadge">
                 ● Connected to API
@@ -477,8 +477,8 @@
         // IMPORTANT: Update this to match your Flask API URL
         const API_URL = 'http://127.0.0.1:5000/api';
 
-        // Initialize map centered on Zomba, Malawi
-        const map = L.map('map').setView([-15.3900, 35.3300], 12);
+        // Initialize map centered on Chikwawa, Malawi
+        const map = L.map('map').setView([-16.0289, 34.7968], 12);
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
