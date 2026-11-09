@@ -480,10 +480,11 @@
         // Initialize map centered on Chikwawa, Malawi
         const map = L.map('map').setView([-16.0289, 34.7968], 12);
 
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
+        // Add CartoDB map tiles (free and reliable)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+            maxZoom: 20,
+            subdomains: 'abcd'
         }).addTo(map);
 
         // Risk level colors
