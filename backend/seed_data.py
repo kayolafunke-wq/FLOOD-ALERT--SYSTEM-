@@ -10,6 +10,16 @@ import random
 
 def seed_database():
     """Populate database with sample data"""
+    # Import init_db from app.py
+    import sys
+    import os
+    sys.path.insert(0, os.path.dirname(__file__))
+    from app import init_db
+    
+    # Initialize database first
+    print("Initializing database...")
+    init_db()
+    
     conn = sqlite3.connect(Config.DB_PATH)
     cur = conn.cursor()
     
