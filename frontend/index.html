@@ -81,31 +81,23 @@
 
         .sidebar {
             width: 380px;
-            background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             overflow-y: auto;
-            padding: 1.8rem;
-            border: 1px solid rgba(59, 130, 246, 0.1);
+            padding: 1.5rem;
         }
 
         .sidebar::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
 
         .sidebar::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #f1f1f1;
             border-radius: 10px;
         }
 
         .sidebar::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 10px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        }
             background: #3b82f6;
             border-radius: 10px;
         }
@@ -128,16 +120,14 @@
         }
 
         .section h2 {
-            font-size: 1.35rem;
-            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
             color: #1e293b;
             border-bottom: 3px solid #3b82f6;
-            padding-bottom: 0.6rem;
+            padding-bottom: 0.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
         .stats-grid {
@@ -161,47 +151,41 @@
         }
 
         .stat-card .number {
-            font-size: 2.8rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: bold;
             margin-bottom: 0.3rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .stat-card .label {
             font-size: 0.9rem;
             opacity: 0.95;
-            font-weight: 500;
-            letter-spacing: 0.3px;
         }
 
         .stat-card.warning {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
         }
 
         .stat-card.danger {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
         }
 
         .stat-card.success {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
 
         .alert-card {
             background: white;
-            border-left: 5px solid;
-            padding: 1.2rem;
+            border-left: 4px solid;
+            padding: 1rem;
             margin-bottom: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             transition: all 0.3s ease;
         }
 
         .alert-card:hover {
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateX(4px);
         }
 
         .alert-warning {
@@ -220,54 +204,50 @@
         }
 
         .alert-card h3 {
-            font-size: 1.15rem;
-            margin-bottom: 0.6rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
             color: #1f2937;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-weight: 600;
         }
 
         .alert-card p {
             font-size: 0.9rem;
-            color: #4b5563;
-            margin-bottom: 0.4rem;
-            line-height: 1.5;
+            color: #6b7280;
+            margin-bottom: 0.3rem;
         }
 
         .alert-card .time {
             font-size: 0.8rem;
             color: #9ca3af;
             font-style: italic;
-            margin-top: 0.5rem;
         }
 
         .legend {
             background: white;
-            padding: 1.3rem;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            padding: 1.2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.7rem;
             transition: transform 0.2s ease;
-            font-size: 0.9rem;
         }
 
         .legend-item:hover {
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
 
         .legend-color {
-            width: 38px;
-            height: 24px;
-            border-radius: 5px;
-            margin-right: 0.8rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            width: 35px;
+            height: 22px;
+            border-radius: 4px;
+            margin-right: 0.7rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .legend-text {
@@ -321,19 +301,37 @@
 
         .input-group input {
             width: 100%;
-            padding: 0.8rem 1rem;
+            padding: 0.7rem;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
-            background: white;
+            transition: border-color 0.3s ease;
         }
 
         .input-group input:focus {
             outline: none;
             border-color: #3b82f6;
+        }
+
+        .area-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .area-select:hover {
+            border-color: #3b82f6;
+        }
+
+        .area-select:focus {
+            outline: none;
+            border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            transform: translateY(-1px);
         }
 
         .loading {
@@ -443,14 +441,32 @@
             </div>
 
             <div class="section">
+                <h2>📍 Search Chikwawa Areas</h2>
+                <div class="input-group">
+                    <label>Select Popular Location</label>
+                    <select id="areaSearch" class="area-select" onchange="searchArea()">
+                        <option value="">-- Choose an area --</option>
+                        <option value="-16.0289,34.7968">Chikwawa Boma (Town Center)</option>
+                        <option value="-16.0100,34.8200">Ngabu Trading Center</option>
+                        <option value="-16.0500,34.7500">Makhanga</option>
+                        <option value="-16.1000,34.7000">Chapananga</option>
+                        <option value="-15.9500,34.8500">Nchalo (Sugar Estate)</option>
+                        <option value="-16.0700,34.8000">Lunzu</option>
+                        <option value="-16.1500,34.7500">Kakoma</option>
+                        <option value="-15.9000,34.7500">Dolo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section">
                 <h2>🔍 Check Location Risk</h2>
                 <div class="input-group">
-                    <label>Latitude (e.g., -15.3900)</label>
-                    <input type="number" id="checkLat" step="0.0001" placeholder="-15.3900" value="-15.35">
+                    <label>Latitude (e.g., -16.0289)</label>
+                    <input type="number" id="checkLat" step="0.0001" placeholder="-16.0289" value="-16.0289">
                 </div>
                 <div class="input-group">
-                    <label>Longitude (e.g., 35.3300)</label>
-                    <input type="number" id="checkLng" step="0.0001" placeholder="35.3300" value="35.35">
+                    <label>Longitude (e.g., 34.7968)</label>
+                    <input type="number" id="checkLng" step="0.0001" placeholder="34.7968" value="34.7968">
                 </div>
                 <button class="btn" onclick="checkRisk()">📍 Calculate Risk</button>
                 <div id="riskResult"></div>
@@ -640,17 +656,40 @@
                 
                 const alertsList = document.getElementById('alertsList');
                 
-                if (data.features.length === 0) {
-                    alertsList.innerHTML = '<div class="no-data">✓ No active alerts</div>';
+                // Filter to show only Chikwawa alerts (or show all with district name)
+                const chikwawaAlerts = data.features.filter(f => 
+                    f.properties.region_name === 'Chikwawa' || 
+                    f.properties.district === 'Chikwawa'
+                );
+                
+                if (chikwawaAlerts.length === 0) {
+                    alertsList.innerHTML = '<div class="no-data" style="color: #10b981; font-weight: 500;">✓ No active alerts for Chikwawa</div>';
                     return;
                 }
                 
-                alertsList.innerHTML = data.features.map(feature => {
+                alertsList.innerHTML = chikwawaAlerts.map(feature => {
                     const props = feature.properties;
                     const alertClass = `alert-${props.alert_level}`;
                     const date = new Date(props.issued_at).toLocaleString();
                     
                     const icon = props.alert_level === 'emergency' ? '🚨' :
+                                props.alert_level === 'warning' ? '⚠️' : '👁️';
+                    
+                    return `
+                        <div class="alert-card ${alertClass}">
+                            <h3>${icon} ${props.region_name}</h3>
+                            <p><strong>${props.alert_level.toUpperCase()}</strong></p>
+                            <p>${props.message}</p>
+                            <p class="time">Issued: ${date}</p>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Error loading alerts:', err);
+                document.getElementById('alertsList').innerHTML = 
+                    '<div class="no-data">Error loading alerts</div>';
+            }
+        }
                                 props.alert_level === 'warning' ? '⚠️' : '👁️';
                     
                     return `
@@ -758,6 +797,30 @@
             } catch (err) {
                 console.error('Error loading regions:', err);
             }
+        }
+
+        // Search for popular areas in Chikwawa
+        function searchArea() {
+            const select = document.getElementById('areaSearch');
+            const value = select.value;
+            
+            if (!value) return;
+            
+            const [lat, lng] = value.split(',').map(parseFloat);
+            
+            // Update input fields
+            document.getElementById('checkLat').value = lat;
+            document.getElementById('checkLng').value = lng;
+            
+            // Pan map to location
+            map.setView([lat, lng], 14);
+            
+            // Add a temporary marker
+            const areaName = select.options[select.selectedIndex].text;
+            L.marker([lat, lng])
+                .addTo(markersLayer)
+                .bindPopup(`<strong>📍 ${areaName}</strong><br>Click "Calculate Risk" to assess flood risk`)
+                .openPopup();
         }
 
         async function checkRisk() {

@@ -85,10 +85,10 @@ def seed_database():
     
     print(f"✓ Added {len(risk_zones)} risk zones")
     
-    # Add sample flood alerts
+    # Add sample flood alerts (Chikwawa-specific)
     alerts = [
-        (2, 'warning', 'Heavy rainfall expected in the next 24 hours. Stay alert.', 48),
-        (5, 'emergency', 'Severe flooding imminent. Evacuate to higher ground immediately.', 72),
+        (3, 'warning', 'Heavy rainfall detected near Shire River. Monitor water levels closely.', 48),
+        (3, 'watch', 'Flood watch in effect for low-lying areas of Chikwawa district.', 24),
     ]
     
     for alert in alerts:
