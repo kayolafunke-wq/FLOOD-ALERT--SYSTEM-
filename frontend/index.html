@@ -481,10 +481,10 @@
         // Initialize map centered on Chikwawa, Malawi
         const map = L.map('map').setView([-16.0289, 34.7968], 12);
 
-        // Add green terrain map tiles (Stamen Terrain - shows vegetation)
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18
+        // Add Esri World Imagery with Streets (free, no API key required)
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 19
         }).addTo(map);
 
         // Risk level colors
