@@ -19,10 +19,10 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
             color: white;
             padding: 1.5rem 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -123,7 +123,7 @@
             font-size: 1.3rem;
             margin-bottom: 1rem;
             color: #1e293b;
-            border-bottom: 3px solid #3b82f6;
+            border-bottom: 3px solid #10b981;
             padding-bottom: 0.5rem;
             display: flex;
             align-items: center;
@@ -138,16 +138,17 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
             color: white;
             padding: 1.2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
-            transition: transform 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.25);
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.35);
         }
 
         .stat-card .number {
@@ -257,7 +258,7 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
             padding: 0.8rem 1.5rem;
@@ -268,13 +269,13 @@
             margin-top: 1rem;
             transition: all 0.3s ease;
             font-weight: 600;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .btn:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
         }
 
         .btn:active {
@@ -480,10 +481,10 @@
         // Initialize map centered on Chikwawa, Malawi
         const map = L.map('map').setView([-16.0289, 34.7968], 12);
 
-        // Add OpenTopoMap tiles (free, no API key required)
-        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-            maxZoom: 17
+        // Add green terrain map tiles (Stamen Terrain - shows vegetation)
+        L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18
         }).addTo(map);
 
         // Risk level colors
@@ -493,6 +494,74 @@
             'moderate': '#fbbf24',
             'low': '#10b981'
         };
+
+        // Add click event to map for instant risk calculation
+        map.on('click', async function(e) {
+            const lat = e.latlng.lat.toFixed(4);
+            const lng = e.latlng.lng.toFixed(4);
+            
+            console.log('Map clicked at:', lat, lng);
+            
+            // Show loading popup
+            const loadingPopup = L.popup()
+                .setLatLng(e.latlng)
+                .setContent('<div style="text-align:center;"><div class="loading">Calculating risk...</div></div>')
+                .openOn(map);
+            
+            try {
+                const res = await fetch(`${API_URL}/calculate-risk`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lat: parseFloat(lat), lng: parseFloat(lng) })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    const color = riskColors[data.risk_level];
+                    const emoji = data.risk_level === 'critical' ? '🔴' :
+                                  data.risk_level === 'high' ? '🟠' :
+                                  data.risk_level === 'moderate' ? '🟡' : '🟢';
+                    
+                    // Create colored marker
+                    L.circleMarker([lat, lng], {
+                        radius: 8,
+                        fillColor: color,
+                        color: '#fff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    })
+                    .addTo(markersLayer)
+                    .bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h3 style="color: ${color}; margin: 0 0 10px 0;">${emoji} Risk Assessment</h3>
+                            <p style="margin: 5px 0;"><strong>Level:</strong> <span style="color: ${color};">${data.risk_level.toUpperCase()}</span></p>
+                            <p style="margin: 5px 0;"><strong>Score:</strong> ${data.risk_score}/100</p>
+                            <p style="margin: 10px 0 5px 0; font-size: 0.85rem; color: #6b7280;">${data.description}</p>
+                            <p style="margin: 5px 0; font-size: 0.75rem; color: #9ca3af;">📍 ${lat}, ${lng}</p>
+                        </div>
+                    `)
+                    .openPopup();
+                    
+                    // Update the risk calculator inputs
+                    document.getElementById('checkLat').value = lat;
+                    document.getElementById('checkLng').value = lng;
+                    
+                } else {
+                    L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent('<div>❌ Error calculating risk</div>')
+                        .openOn(map);
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent('<div>❌ Connection error</div>')
+                    .openOn(map);
+            }
+        });
 
         // Store layer groups for toggling
         let riskZonesLayer = L.layerGroup().addTo(map);
