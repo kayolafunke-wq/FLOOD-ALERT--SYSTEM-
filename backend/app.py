@@ -509,7 +509,7 @@ def get_statistics():
 
 @app.route('/api/calculate-risk', methods=['POST'])
 def calculate_risk():
-    """Calculate flood risk for given coordinates"""
+    """Calculate flood risk for given coordinates using realistic Chikwawa factors"""
     data = request.get_json()
     
     if not data:
@@ -527,74 +527,189 @@ def calculate_risk():
     except ValueError:
         return jsonify({'error': 'Invalid coordinates'}), 400
     
-    # Simple risk calculation based on nearby factors
+    # IMPROVED REALISTIC RISK CALCULATION
     risk_score = 0.0
     factors = []
     
-    # Check nearby rainfall stations and recent rainfall
+    # ===== 1. RAINFALL ANALYSIS (Weight: 35 points) =====
     rainfall_query = """
-        SELECT AVG(rainfall_mm) as avg_rainfall
+        SELECT AVG(rainfall_mm) as avg_rainfall, MAX(rainfall_mm) as max_rainfall
         FROM rainfall_data
         WHERE recorded_at > datetime('now', '-24 hours')
     """
     rainfall_result = execute_query(rainfall_query, fetch_one=True)
     if rainfall_result and rainfall_result['avg_rainfall']:
         avg_rainfall = rainfall_result['avg_rainfall']
-        if avg_rainfall > 50:
+        max_rainfall = rainfall_result['max_rainfall']
+        
+        # Heavy rainfall thresholds
+        if avg_rainfall > 100:  # Extreme rainfall
+            risk_score += 35
+            factors.append(f"⚠️ Extreme rainfall: {avg_rainfall:.1f}mm/24h")
+        elif avg_rainfall > 75:  # Very heavy
             risk_score += 30
-            factors.append(f"High rainfall: {avg_rainfall:.1f}mm")
-        elif avg_rainfall > 25:
-            risk_score += 15
-            factors.append(f"Moderate rainfall: {avg_rainfall:.1f}mm")
+            factors.append(f"⚠️ Very heavy rainfall: {avg_rainfall:.1f}mm/24h")
+        elif avg_rainfall > 50:  # Heavy
+            risk_score += 20
+            factors.append(f"⚠️ Heavy rainfall: {avg_rainfall:.1f}mm/24h")
+        elif avg_rainfall > 25:  # Moderate
+            risk_score += 10
+            factors.append(f"Moderate rainfall: {avg_rainfall:.1f}mm/24h")
+        else:
+            factors.append(f"Light rainfall: {avg_rainfall:.1f}mm/24h")
     
-    # Check for active alerts in the region
+    # ===== 2. PROXIMITY TO SHIRE RIVER (Weight: 25 points) =====
+    # Shire River runs through Chikwawa - major flood source
+    shire_river_lat = -16.0289
+    shire_river_lng = 34.7968
+    
+    # Calculate distance to river (simplified)
+    distance_to_river = ((lat - shire_river_lat)**2 + (lng - shire_river_lng)**2)**0.5
+    distance_km = distance_to_river * 111  # Convert to approximate km
+    
+    if distance_km < 0.5:  # Within 500m of river
+        risk_score += 25
+        factors.append(f"🌊 Very close to Shire River ({distance_km:.1f}km)")
+    elif distance_km < 1:  # Within 1km
+        risk_score += 20
+        factors.append(f"🌊 Close to Shire River ({distance_km:.1f}km)")
+    elif distance_km < 2:  # Within 2km
+        risk_score += 15
+        factors.append(f"🌊 Near Shire River ({distance_km:.1f}km)")
+    elif distance_km < 5:
+        risk_score += 8
+        factors.append(f"Moderate distance from river ({distance_km:.1f}km)")
+    else:
+        factors.append(f"Far from river ({distance_km:.1f}km)")
+    
+    # ===== 3. ELEVATION/TOPOGRAPHY (Weight: 20 points) =====
+    # Chikwawa is low-lying (200-400m elevation)
+    # Lower areas flood first
+    base_elevation = 300  # Approximate average for Chikwawa
+    
+    # Estimate elevation based on distance from river (simplified)
+    estimated_elevation = base_elevation + (distance_km * 10)
+    
+    if estimated_elevation < 250:  # Very low-lying
+        risk_score += 20
+        factors.append(f"⬇️ Very low elevation (~{estimated_elevation:.0f}m)")
+    elif estimated_elevation < 300:  # Low
+        risk_score += 15
+        factors.append(f"⬇️ Low elevation (~{estimated_elevation:.0f}m)")
+    elif estimated_elevation < 350:  # Moderate
+        risk_score += 8
+        factors.append(f"Moderate elevation (~{estimated_elevation:.0f}m)")
+    else:  # Higher ground
+        risk_score += 2
+        factors.append(f"⬆️ Higher ground (~{estimated_elevation:.0f}m)")
+    
+    # ===== 4. ACTIVE ALERTS (Weight: 15 points) =====
     alerts_query = """
-        SELECT COUNT(*) as alert_count
+        SELECT COUNT(*) as alert_count, MAX(alert_level) as max_level
         FROM flood_alerts
         WHERE active = 1 AND (expires_at IS NULL OR expires_at > datetime('now'))
     """
     alerts_result = execute_query(alerts_query, fetch_one=True)
     if alerts_result and alerts_result['alert_count'] > 0:
-        risk_score += 25
-        factors.append(f"{alerts_result['alert_count']} active alerts")
+        alert_count = alerts_result['alert_count']
+        max_level = alerts_result['max_level']
+        
+        if max_level == 'emergency':
+            risk_score += 15
+            factors.append(f"🚨 {alert_count} EMERGENCY alert(s) active")
+        elif max_level == 'warning':
+            risk_score += 10
+            factors.append(f"⚠️ {alert_count} warning alert(s) active")
+        else:
+            risk_score += 5
+            factors.append(f"👁️ {alert_count} watch alert(s) active")
     
-    # Check existing risk zones
-    risk_zones_query = """
-        SELECT AVG(risk_score) as avg_risk
-        FROM flood_risk_zones
-        WHERE risk_level IN ('high', 'critical')
+    # ===== 5. SEASONAL FACTORS (Weight: 10 points) =====
+    current_month = datetime.now().month
+    # Rainy season in Malawi: November to April
+    if current_month in [11, 12, 1, 2, 3]:  # Peak rainy season
+        risk_score += 10
+        factors.append("🌧️ Peak rainy season (Nov-Mar)")
+    elif current_month in [4, 10]:  # Transition months
+        risk_score += 5
+        factors.append("🌦️ Transition season")
+    else:
+        factors.append("☀️ Dry season (lower risk)")
+    
+    # ===== 6. SOIL SATURATION (Weight: 10 points) =====
+    # Check rainfall over past 7 days
+    week_rainfall_query = """
+        SELECT SUM(rainfall_mm) as total_rainfall
+        FROM rainfall_data
+        WHERE recorded_at > datetime('now', '-7 days')
     """
-    zones_result = execute_query(risk_zones_query, fetch_one=True)
-    if zones_result and zones_result['avg_risk']:
-        risk_score += zones_result['avg_risk'] * 0.3
-        factors.append("Nearby high-risk zones")
+    week_result = execute_query(week_rainfall_query, fetch_one=True)
+    if week_result and week_result['total_rainfall']:
+        total_week = week_result['total_rainfall']
+        
+        if total_week > 200:  # Very saturated soil
+            risk_score += 10
+            factors.append(f"💧 Saturated soil ({total_week:.0f}mm/week)")
+        elif total_week > 100:  # Wet soil
+            risk_score += 6
+            factors.append(f"💧 Wet soil ({total_week:.0f}mm/week)")
+        elif total_week > 50:
+            risk_score += 3
+            factors.append(f"Moist soil ({total_week:.0f}mm/week)")
     
-    # Add random variation based on location (simplified)
-    risk_score += abs(hash(f"{lat},{lng}")) % 20
+    # ===== FINAL RISK LEVEL DETERMINATION =====
+    risk_score = min(risk_score, 100)  # Cap at 100
     
-    # Determine risk level
     if risk_score >= 75:
         risk_level = 'critical'
-        risk_description = 'Severe flood risk - immediate action required'
+        risk_description = 'CRITICAL: Severe flood risk - evacuate immediately to higher ground'
+        recommendations = [
+            'Evacuate to higher ground NOW',
+            'Move to designated emergency shelter',
+            'Take emergency supplies and documents',
+            'Avoid walking or driving through water',
+            'Stay tuned to emergency broadcasts'
+        ]
     elif risk_score >= 50:
         risk_level = 'high'
-        risk_description = 'High flood risk - stay alert and prepared'
+        risk_description = 'HIGH: Significant flood risk - be prepared to evacuate'
+        recommendations = [
+            'Prepare emergency evacuation bag',
+            'Identify evacuation routes',
+            'Move valuables to higher floors',
+            'Monitor weather updates closely',
+            'Be ready to evacuate quickly'
+        ]
     elif risk_score >= 25:
         risk_level = 'moderate'
-        risk_description = 'Moderate flood risk - monitor conditions'
+        risk_description = 'MODERATE: Flood possible - monitor conditions closely'
+        recommendations = [
+            'Monitor weather forecasts',
+            'Prepare emergency supplies',
+            'Stay aware of local alerts',
+            'Avoid flood-prone areas',
+            'Check drainage around property'
+        ]
     else:
         risk_level = 'low'
-        risk_description = 'Low flood risk'
+        risk_description = 'LOW: Flood unlikely under current conditions'
+        recommendations = [
+            'Continue normal activities',
+            'Stay informed of weather changes',
+            'Maintain emergency preparedness'
+        ]
     
     return jsonify({
         'success': True,
         'lat': lat,
         'lng': lng,
-        'risk_score': round(min(risk_score, 100), 2),
+        'risk_score': round(risk_score, 2),
         'risk_level': risk_level,
         'description': risk_description,
         'factors': factors,
-        'calculated_at': datetime.now().isoformat()
+        'recommendations': recommendations,
+        'calculated_at': datetime.now().isoformat(),
+        'methodology': 'Based on rainfall, river proximity, elevation, alerts, season, and soil saturation'
     })
 
 @app.route('/api/rainfall/add', methods=['POST'])
