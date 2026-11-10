@@ -14,7 +14,7 @@ A web-based flood alert system that:
 - Tracks rainfall data from weather stations
 
 ## Technologies Used
-- **Database:** SQLite (no installation required!)
+- **Database:** PostgreSQL with PostGIS
 - **Backend:** Python Flask REST API
 - **Frontend:** HTML, CSS, JavaScript, Leaflet.js
 - **Mapping:** OpenStreetMap with Leaflet
@@ -27,18 +27,24 @@ cd backend
 pip install -r requirements.txt
 ```
 
-### 2. Run the Backend
+### 2. Setup Database
+Setup PostgreSQL and create the database:
+```sql
+CREATE DATABASE flood_alert;
+```
+
+### 3. Run the Backend
 ```bash
 python app.py
 ```
-The database will be created automatically on first run!
+The database tables will be created automatically on first run.
 
-### 3. (Optional) Add Sample Data
+### 4. (Optional) Add Sample Data
 ```bash
 python seed_data.py
 ```
 
-### 4. Open the Frontend
+### 5. Open the Frontend
 Open `frontend/index.html` in a web browser
 
 ## API Endpoints
@@ -54,11 +60,11 @@ Open `frontend/index.html` in a web browser
 - `POST /api/alerts/create` - Create new alert
 
 ## Features
-✅ No database server setup required (uses SQLite)  
-✅ Interactive map with flood risk visualization  
-✅ Real-time rainfall monitoring  
-✅ Risk calculator for any location  
-✅ Alert management system  
+✅ PostgreSQL database with spatial data support
+✅ Interactive map with flood risk visualization
+✅ Real-time rainfall monitoring
+✅ Risk calculator for any location
+✅ Alert management system
 ✅ RESTful API for easy integration  
 
 ## Project Structure
