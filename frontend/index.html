@@ -130,6 +130,38 @@
             gap: 0.5rem;
         }
 
+        .section-icon {
+            width: 1.35rem;
+            height: 1.35rem;
+            flex: 0 0 auto;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .section-icon--statistics { color: #2563eb; }
+        .section-icon--alerts { color: #dc2626; }
+        .section-icon--areas { color: #059669; }
+        .section-icon--risk { color: #ea580c; }
+        .section-icon--legend { color: #7c3aed; }
+
+        .alert-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex: 0 0 auto;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .alert-icon--emergency { color: #dc2626; }
+        .alert-icon--warning { color: #d97706; }
+        .alert-icon--watch { color: #2563eb; }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -269,6 +301,23 @@
             transition: all 0.3s ease;
             font-weight: 600;
             box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-content {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 1.2rem;
+            height: 1.2rem;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .btn:hover {
@@ -429,21 +478,39 @@
     <div class="container">
         <div class="sidebar">
             <div class="section">
-                <h2>📊 Statistics</h2>
+                <h2>
+                    <svg class="section-icon section-icon--statistics" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <path d="M3.75 3v17.25H21" />
+                        <path d="M7.5 14.25v3m4.5-6v6m4.5-10.5v10.5" />
+                    </svg>
+                    Statistics
+                </h2>
                 <div class="stats-grid" id="statsGrid">
                     <div class="loading">Loading</div>
                 </div>
             </div>
 
             <div class="section">
-                <h2>⚠️ Active Alerts</h2>
+                <h2>
+                    <svg class="section-icon section-icon--alerts" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <path d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.95 3.374H4.647c-1.732 0-2.816-1.874-1.95-3.374L10.05 3.5c.866-1.5 3.034-1.5 3.9 0l7.353 12.626Z" />
+                        <path d="M12 16.5h.01" />
+                    </svg>
+                    Active Alerts
+                </h2>
                 <div id="alertsList">
                     <div class="loading">Loading alerts</div>
                 </div>
             </div>
 
             <div class="section">
-                <h2>📍 Search Chikwawa Areas</h2>
+                <h2>
+                    <svg class="section-icon section-icon--areas" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <path d="M20.25 10.5c0 5.25-8.25 11.25-8.25 11.25S3.75 15.75 3.75 10.5a8.25 8.25 0 1 1 16.5 0Z" />
+                        <circle cx="12" cy="10.5" r="2.25" />
+                    </svg>
+                    Search Chikwawa Areas
+                </h2>
                 <div class="input-group">
                     <label>Select Popular Location</label>
                     <select id="areaSearch" class="area-select" onchange="searchArea()">
@@ -461,7 +528,13 @@
             </div>
 
             <div class="section">
-                <h2>🔍 Check Location Risk</h2>
+                <h2>
+                    <svg class="section-icon section-icon--risk" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <circle cx="10.5" cy="10.5" r="6.75" />
+                        <path d="m15.5 15.5 4.75 4.75" />
+                    </svg>
+                    Check Location Risk
+                </h2>
                 <div class="input-group">
                     <label>Latitude (e.g., -16.0289)</label>
                     <input type="number" id="checkLat" step="0.0001" placeholder="-16.0289" value="-16.0289">
@@ -470,12 +543,26 @@
                     <label>Longitude (e.g., 34.7968)</label>
                     <input type="number" id="checkLng" step="0.0001" placeholder="34.7968" value="34.7968">
                 </div>
-                <button class="btn" onclick="checkRisk()">📍 Calculate Risk</button>
+                <button class="btn" onclick="checkRisk()">
+                    <span class="btn-content">
+                        <svg class="btn-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                            <path d="M20.25 10.5c0 5.25-8.25 11.25-8.25 11.25S3.75 15.75 3.75 10.5a8.25 8.25 0 1 1 16.5 0Z" />
+                            <circle cx="12" cy="10.5" r="2.25" />
+                        </svg>
+                        Calculate Risk
+                    </span>
+                </button>
                 <div id="riskResult"></div>
             </div>
 
             <div class="section">
-                <h2>🗺️ Map Legend</h2>
+                <h2>
+                    <svg class="section-icon section-icon--legend" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <path d="m3.75 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z" />
+                        <path d="M9.75 3v15m6-12v15" />
+                    </svg>
+                    Map Legend
+                </h2>
                 <div class="legend">
                     <div class="legend-item">
                         <div class="legend-color" style="background: #ef4444;"></div>
@@ -674,12 +761,16 @@
                     const alertClass = `alert-${props.alert_level}`;
                     const date = new Date(props.issued_at).toLocaleString();
                     
-                    const icon = props.alert_level === 'emergency' ? '🚨' :
-                                props.alert_level === 'warning' ? '⚠️' : '👁️';
+                    const iconClass = props.alert_level === 'emergency'
+                        ? 'emergency'
+                        : props.alert_level === 'warning' ? 'warning' : 'watch';
+                    const icon = props.alert_level === 'watch'
+                        ? '<svg class="alert-icon alert-icon--watch" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M2.25 12s3.5-6.75 9.75-6.75S21.75 12 21.75 12 18.25 18.75 12 18.75 2.25 12 2.25 12Z" /><circle cx="12" cy="12" r="2.25" /></svg>'
+                        : `<svg class="alert-icon alert-icon--${iconClass}" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.95 3.374H4.647c-1.732 0-2.816-1.874-1.95-3.374L10.05 3.5c.866-1.5 3.034-1.5 3.9 0l7.353 12.626Z" /><path d="M12 16.5h.01" /></svg>`;
                     
                     return `
                         <div class="alert-card ${alertClass}">
-                            <h3>${icon} ${props.region_name}</h3>
+                            <h3>${icon}${props.region_name}</h3>
                             <p><strong>${props.alert_level.toUpperCase()}</strong></p>
                             <p>${props.message}</p>
                             <p class="time">Issued: ${date}</p>
