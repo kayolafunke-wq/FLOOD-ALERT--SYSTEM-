@@ -90,7 +90,9 @@ flood-alert-system/
 - Integration with government weather APIs
 
 ## Contributors
-- Your Team Name
+- Koyola Frank
+- Robert Nkhoma
+- Shadreck Mkandawire
 
 ## License
 MIT License
